@@ -10,6 +10,12 @@ I build intelligence layers, tool-using agents, agentic workflows, and the full-
 - **Agentic engineering:** specialist orchestration, isolated working environments, independent validation, and architecture checks informed by agent-session analysis.
 - **Production platforms:** React/Next.js, TypeScript, C#/.NET, and Azure, with authentication, payments, sensitive-data protection, and operational workflows.
 
+## Architecture case studies
+
+**[Building a Permission-Aware Intelligence Layer](studies/permission-aware-intelligence.md)**
+
+An anonymized study of shared AI services, application-owned authorization, and the trade-offs between streaming and validation. Includes an architecture diagram, three design decisions, a worked failure example, and evidence limits.
+
 ## Selected work
 
 **Authflow — Co-Founder and Chief Architect**  
