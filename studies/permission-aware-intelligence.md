@@ -29,33 +29,22 @@ Here, an **agent** can choose successive tools in pursuit of an objective. An **
 ## 2. Architecture
 
 ```mermaid
-flowchart LR
-    UI["Application UI"]
-
-    subgraph APP["Application authority"]
-        CTX["Actor and scope<br/>Context and tools"]
-        GATE["Tool authorization"]
-        DOMAIN["Scoped services<br/>Selected fields"]
-        DATA[("Application data")]
-    end
-
-    subgraph INT["Shared intelligence services"]
-        RUN["Typed completion<br/>Bounded tool loop"]
-        RELEASE["Output release<br/>Buffered / optimistic"]
-    end
-
+flowchart TB
+    APP["Application context<br/>Actor, scope, permitted tools"]
+    RUN["Intelligence execution<br/>Typed completion or tool loop"]
+    TOOLS["Application tools<br/>Authorization and scoped services"]
     MODEL["Model provider"]
+    DATA[("Domain data")]
+    RELEASE["Output release policy<br/>Buffered or optimistic"]
+    UI["Application UI"]
     RECORD[("Operation records<br/>Best effort")]
 
-    UI -->|Request| CTX
-    CTX -->|Context and capabilities| RUN
-    CTX -.->|Trusted scope| GATE
-    RUN -->|Prompt| MODEL
-    MODEL -->|Response / proposal| RUN
-    RUN -->|Proposed call| GATE
-    GATE -->|Authorized call| DOMAIN
-    DOMAIN <--> DATA
-    DOMAIN -->|Scoped result| RUN
+    APP -->|Selected context| RUN
+    APP -.->|Trusted scope| TOOLS
+    RUN <-->|Model calls| MODEL
+    RUN -->|Proposed call| TOOLS
+    TOOLS -->|Scoped result| RUN
+    TOOLS <--> DATA
     RUN -->|Candidate answer| RELEASE
     RELEASE -->|Answer / failure| UI
     RUN -.->|Operation metadata| RECORD
