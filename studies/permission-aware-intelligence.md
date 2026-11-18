@@ -29,36 +29,36 @@ Here, an **agent** can choose successive tools in pursuit of an objective. An **
 ## 2. Architecture
 
 ```mermaid
-flowchart TB
-    UI["Application interface"]
+flowchart LR
+    UI["Application UI"]
 
-    subgraph APP["Application-owned authority"]
-        CTX["Authenticated actor and scope<br/>Context assembly and permitted tool catalog"]
-        GATE["Tool dispatch<br/>Permission and resource checks"]
-        DOMAIN["Scoped domain services<br/>Selected result fields"]
+    subgraph APP["Application authority"]
+        CTX["Actor and scope<br/>Context and tools"]
+        GATE["Tool authorization"]
+        DOMAIN["Scoped services<br/>Selected fields"]
         DATA[("Application data")]
     end
 
     subgraph INT["Shared intelligence services"]
-        RUN["Typed completion or bounded tool loop<br/>Provider adapters and configured checks"]
-        RELEASE["Output release policy<br/>Buffered or optimistic"]
+        RUN["Typed completion<br/>Bounded tool loop"]
+        RELEASE["Output release<br/>Buffered / optimistic"]
     end
 
-    MODEL["Model provider<br/>Generated content and tool proposals"]
-    RECORD[("Operation records<br/>Best-effort persistence")]
+    MODEL["Model provider"]
+    RECORD[("Operation records<br/>Best effort")]
 
     UI -->|Request| CTX
-    CTX -->|Selected context and capabilities| RUN
-    CTX -.->|Trusted execution context| GATE
-    RUN -->|Model request| MODEL
-    MODEL -->|Response or proposed call| RUN
-    RUN -->|Untrusted tool arguments| GATE
-    GATE -->|Authorized request| DOMAIN
+    CTX -->|Context and capabilities| RUN
+    CTX -.->|Trusted scope| GATE
+    RUN -->|Prompt| MODEL
+    MODEL -->|Response / proposal| RUN
+    RUN -->|Proposed call| GATE
+    GATE -->|Authorized call| DOMAIN
     DOMAIN <--> DATA
     DOMAIN -->|Scoped result| RUN
     RUN -->|Candidate answer| RELEASE
-    RELEASE -->|Answer or explicit failure state| UI
-    RUN -.->|Actor, scope, usage and outcome| RECORD
+    RELEASE -->|Answer / failure| UI
+    RUN -.->|Operation metadata| RECORD
 ```
 
 The application assembles context and supplies tool implementations. The shared layer handles execution mechanics; it does not invent tenant identity, grant permissions, or become the owner of domain rules.
